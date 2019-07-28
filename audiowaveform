@@ -1,0 +1,68 @@
+var audio = document.getElementById("audio");
+var files = this.files;
+audio.src = "";
+audio.load();
+audio.play();
+wfxContainer.getActiveObject().initAudio();
+function renderFrame() {
+    requestAnimationFrame(renderFrame);
+    wfxContainer.getActiveObject()._removeCacheCanvas();
+    wfxContainer.requestRenderAll();
+}
+renderFrame();
+
+var barHeight, barWidth, dataArray, analyser;
+fabric.audioWaveForm = fabric.util.createClass(fabric.Object, {
+    stateProperties: fabric.Object.prototype.stateProperties.concat('rx', 'ry'),
+    type: 'audio',
+    rx:   0,
+    ry:   0,
+    cacheProperties: fabric.Object.prototype.cacheProperties.concat('rx', 'ry'),
+    initialize: function(options) {
+      this.callSuper('initialize', options);
+      this._initRxRy();
+    },
+    _initRxRy: function() {
+      if (this.rx && !this.ry) {
+        this.ry = this.rx;
+      }
+      else if (this.ry && !this.rx) {
+        this.rx = this.ry;
+      }
+    },
+    initAudio: function() {
+        var context = new AudioContext();
+        var src = context.createMediaElementSource(audio);
+        analyser = context.createAnalyser();
+        src.connect(analyser);
+        analyser.connect(context.destination);
+
+        analyser.fftSize = 256;
+        this.bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(this.bufferLength);
+        barWidth = ((this.width) / this.bufferLength) * 2.5;
+        
+    },
+    _render: function(ctx) {
+        var WIDTH = this.width;
+        var HEIGHT = this.height;
+        
+        var x = -WIDTH/2;
+        var canvHei = HEIGHT/2;
+        ctx.fillStyle = "#000";
+        ctx.fillRect(-this.width / 2, -this.height / 2, WIDTH, HEIGHT);
+        analyser && analyser.getByteFrequencyData(dataArray);
+        for (var i = 0; i < this.bufferLength; i++) {
+        barHeight = dataArray[i];
+        
+        var r = barHeight + (25 * (i/this.bufferLength));
+        var g = 250 * (i/this.bufferLength);
+        var b = 50;
+
+        ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+        ctx.fillRect(x, canvHei - barHeight, barWidth, barHeight);
+
+        x += barWidth + 1;
+      }
+     }
+   });

@@ -104,7 +104,7 @@
     integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
   </script>
   <script>
-    var list = ['sdgsd', "sdgsdg", "sdgsdg"];
+    var list = ['Pepper', "Eggs", "Onion"];
     let childLength = document.getElementsByClassName('childLength')[0];
     childLength.innerText = list.length + " Tasks"
     for (var i = 0; i < list.length; i++) {

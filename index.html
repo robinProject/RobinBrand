@@ -1,7 +1,190 @@
 <html>
-    <title></title>
-   <body>
-   <p>hi</p>
-   </body>
-   <script src="js/index.js"></script>
+<title>Todo List</title>
+
+<head>
+    <link rel="stylesheet" type="text/css"
+        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+
+       /*  .todoApp {
+            width: calc(100% - 70%);
+            height: calc(100% - 30%);
+            border: 1px solid red;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        } */
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding-left: 10px;
+            padding-right: 10px;
+            color: #333;
+            height: 90vh;
+            margin-top: 5vh;
+            margin-bottom: 5vh;
+            overflow-y: auto;
+        }
+
+        form {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        }
+
+        .todo-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .todo-item {
+            margin-bottom: 10px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .done {
+             text-decoration: line-through;
+        }
+
+        .todo-item div {
+            flex-grow: 1;
+            margin-left: 10px;
+            margin-right: 10px;
+            font-size: 22px;
+        }
+
+        /* input[type="checkbox"] {
+        display: none;
+        } */
+
+      /*   .taskName {
+            top: 0px;
+            position: absolute;
+            padding: 12px 16px 12px 16px;
+        }
+        
+
+        .selected {
+            position: absolute;
+            left: 0px;
+        } */
+
+        .delete-todo {
+            border: none;
+            padding: 8px;
+            /* background-color: transparent;
+            outline: none;
+            cursor: pointer; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class='container'>
+        <div class="todoList"></div>
+        <form class="todoForm">
+            <input id="enterTask" autofocus type="text" aria-label="Enter a new todo item"
+                placeholder="E.g. Build a web app" class="js-todo-input">
+            </form>
+            <button onclick="addList()">Add</button>
+        <ul class="todotasks"></ul>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
+    </script>
+    <script>
+        function addTodoList(text) {
+            var _ulEl = document.getElementsByClassName('todotasks')[0];
+            var div = document.createElement('div');
+            var _liEl = document.createElement('li');
+            _liEl.classList.add("todo-item");
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.className = "selected";
+            checkbox.onclick = selectTodo;
+            div.className = "taskName";
+            var todoList = document.getElementsByClassName('todoList')[0];
+            var _editIcon = document.createElement('span');
+            var _deleteIcon = document.createElement('span');
+            _deleteIcon.onclick = deleteTask;
+            _deleteIcon.classList.add("delete-todo")
+            _editIcon.onclick = editTask;
+            _editIcon.classList.add("edit")
+            _deleteIcon.innerHTML = '<i class="fa fa-trash-o" aria-hidden="true"></i>';
+            _editIcon.innerHTML = '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>';
+            div.innerHTML = text
+            _liEl.appendChild(checkbox);
+            _liEl.appendChild(div);
+            _liEl.appendChild(_editIcon);
+            _liEl.appendChild(_deleteIcon);
+            _ulEl.appendChild(_liEl)
+            todoList.append(_ulEl);
+        };
+
+        function addList() {
+            let input = document.getElementById('enterTask');
+            let text = input.value.trim();
+            if (text == "") {
+                alert("Enter your task");
+                return;
+            } else {
+                input.value = "";
+                input.focus();
+                addTodoList(text)
+            }
+        }
+
+        const _todoForm = document.getElementsByClassName('todoForm')[0];
+        _todoForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            let input = document.getElementById('enterTask');
+            let text = input.value.trim();
+            if (text == "") {
+                alert("Enter your task");
+                return;
+            } else {
+                input.value = "";
+                input.focus();
+                addTodoList(text)
+            }
+        });
+
+        function selectTodo() {
+            if(this.checked) {
+                this.parentElement.classList.add('done');
+            }
+            else {
+                this.parentElement.classList.remove('done');
+            }
+        };
+
+        function deleteTask() {
+            var div = this.parentElement;
+            div.remove();
+        };
+
+        function editTask() {
+            this.previousElementSibling.contentEditable = true;
+            this.previousElementSibling.focus();
+        };
+    </script>
+</body>
+
 </html>
